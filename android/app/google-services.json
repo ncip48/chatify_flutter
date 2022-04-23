@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "722510993006",
+    "project_id": "chatify-92637",
+    "storage_bucket": "chatify-92637.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722510993006:android:2442cf26935dd9f159b87f",
+        "android_client_info": {
+          "package_name": "com.herly.chatify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722510993006-7jsll3jg0h66vkj2hk1h21kmji1gta1d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.herly.chatify",
+            "certificate_hash": "f1cf80e68b38bf2102a9fefccbfea77369a282c0"
+          }
+        },
+        {
+          "client_id": "722510993006-u8b3mevqh3hmebruptbdh5l4q7uu813e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqZ7N5czl7yEswdva_rGKLUhSKkEkE6yU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722510993006-u8b3mevqh3hmebruptbdh5l4q7uu813e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
