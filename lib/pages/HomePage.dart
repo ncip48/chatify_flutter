@@ -33,27 +33,33 @@ class _MyHomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // getContacts();
-    futureContact = getContacts();
+    getContacts();
   }
 
   List<Contacts> _contactList = [];
-  late Future<List<Contacts>> futureContact;
-  Future<List<Contacts>> getContacts() async {
+  bool _isLoading = true;
+  Future<void> getContacts() async {
+    setState(() {
+      _isLoading = true;
+    });
     final response = await getRequestAPI('contacts', 'get', null, context);
     log(response.toString());
     List<dynamic> values = response;
+    List<Contacts> temp = [];
     if (values.isNotEmpty) {
       for (int i = 0; i < values.length; i++) {
         if (values[i] != null) {
           Map<String, dynamic> map = values[i];
-          _contactList.add(Contacts.fromJson(map));
+          temp.add(Contacts.fromJson(map));
           // log('Id-------${map['id']}');
         }
       }
     }
     print(_contactList.length);
-    return _contactList;
+    setState(() {
+      _contactList = temp;
+      _isLoading = false;
+    });
   }
 
   @override
@@ -65,191 +71,194 @@ class _MyHomePageState extends State<HomePage> {
       decoration: const BoxDecoration(
         color: Color(0xFF273A48),
       ),
-      child: Stack(
-        children: <Widget>[
-          Scaffold(
-            backgroundColor: green,
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed(Routes.NewChat);
-              },
-              child: const Icon(Icons.add),
+      child: RefreshIndicator(
+        onRefresh: getContacts,
+        child: Stack(
+          children: <Widget>[
+            Scaffold(
               backgroundColor: green,
-            ),
-            body: SafeArea(
-              child: Container(
-                child: Stack(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                top: 5,
-                                left: 15,
-                                right: 15,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    'Chatify',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(Routes.NewChat);
+                },
+                child: const Icon(Icons.add),
+                backgroundColor: green,
+              ),
+              body: SafeArea(
+                child: Container(
+                  child: Stack(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 5,
+                                  left: 15,
+                                  right: 15,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Chatify',
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
+                                        color: putih,
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.account_circle,
+                                      size: 30,
                                       color: putih,
                                     ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: 120.0,
+                              width: _width,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 15.0,
+                                      right: 5.0,
+                                      top: 0.0,
+                                      bottom: 4.0,
+                                    ),
+                                    child: InkWell(
+                                      onTap: () {
+                                        print('Card selected');
+                                      },
+                                      child: Container(
+                                        width: 60,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.max,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: putih,
+                                                border: Border.all(
+                                                  color: putih,
+                                                  width: 1.0,
+                                                ),
+                                              ),
+                                              width: 70,
+                                              height: 70,
+                                              child: const Icon(
+                                                Icons.add,
+                                                color: green,
+                                                size: 40,
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                'Add',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: putih,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  const Icon(
-                                    Icons.account_circle,
-                                    size: 30,
-                                    color: putih,
+                                  Container(
+                                    width: _width - 80,
+                                    child: ListView.builder(
+                                      itemBuilder: (context, index) {
+                                        EdgeInsets padding = index == 0
+                                            ? const EdgeInsets.only(
+                                                left: 20.0,
+                                                right: 10.0,
+                                                top: 0.0,
+                                                bottom: 20.0,
+                                              )
+                                            : const EdgeInsets.only(
+                                                left: 10.0,
+                                                right: 10.0,
+                                                top: 0.0,
+                                                bottom: 20.0,
+                                              );
+
+                                        return ListStory(
+                                            image:
+                                                'https://picsum.photos/250?image=9',
+                                            name: 'Herly',
+                                            count: 3,
+                                            padding: padding);
+                                      },
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: stories.length,
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                          Container(
-                            height: 120.0,
-                            width: _width,
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 15.0,
-                                    right: 5.0,
-                                    top: 0.0,
-                                    bottom: 4.0,
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      print('Card selected');
-                                    },
-                                    child: Container(
-                                      width: 60,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: putih,
-                                              border: Border.all(
-                                                color: putih,
-                                                width: 1.0,
-                                              ),
-                                            ),
-                                            width: 70,
-                                            height: 70,
-                                            child: const Icon(
-                                              Icons.add,
-                                              color: green,
-                                              size: 40,
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Text(
-                                              'Add',
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.normal,
-                                                color: putih,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                            Expanded(
+                              child: Container(
+                                height: double.infinity,
+                                width: _width,
+                                decoration: BoxDecoration(
+                                  color: putih,
                                 ),
-                                Container(
-                                  width: _width - 80,
-                                  child: ListView.builder(
-                                    itemBuilder: (context, index) {
-                                      EdgeInsets padding = index == 0
-                                          ? const EdgeInsets.only(
-                                              left: 20.0,
-                                              right: 10.0,
-                                              top: 0.0,
-                                              bottom: 20.0,
-                                            )
-                                          : const EdgeInsets.only(
-                                              left: 10.0,
-                                              right: 10.0,
-                                              top: 0.0,
-                                              bottom: 20.0,
-                                            );
-
-                                      return ListStory(
-                                          image:
-                                              'https://picsum.photos/250?image=9',
-                                          name: 'Herly',
-                                          count: 3,
-                                          padding: padding);
-                                    },
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: stories.length,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: double.infinity,
-                              width: _width,
-                              decoration: BoxDecoration(
-                                color: putih,
+                                child: _isLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          color: green,
+                                        ),
+                                      )
+                                    : _contactList.isEmpty
+                                        ? Center(
+                                            child: Text('No Contact Found'),
+                                          )
+                                        : ListView.builder(
+                                            itemCount: _contactList.length,
+                                            itemBuilder: (context, index) {
+                                              var contacts =
+                                                  _contactList[index];
+                                              return ListChat(
+                                                image:
+                                                    'https://picsum.photos/seed/651/600',
+                                                name: contacts.name!,
+                                                chat: contacts
+                                                    .recentChat!.message!,
+                                                time: contacts
+                                                    .recentChat!.createdAt!,
+                                                me_send: contacts.recentChatMe!,
+                                              );
+                                            },
+                                          ),
                               ),
-                              child: FutureBuilder<List<Contacts>>(
-                                future: futureContact,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    return ListView.builder(
-                                      itemBuilder: (context, index) {
-                                        Contacts contacts =
-                                            snapshot.data![index];
-                                        return ListChat(
-                                          image:
-                                              'https://picsum.photos/seed/651/600',
-                                          name: contacts.name!,
-                                          chat: contacts.recentChat!.message!,
-                                          time: contacts.recentChat!.createdAt!,
-                                          me_send: contacts.recentChatMe!,
-                                        );
-                                      },
-                                      itemCount: snapshot.data?.length,
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    return Text("${snapshot.error}");
-                                  }
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
-                            ),
-                          )
-                        ],
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
