@@ -5,7 +5,7 @@ class Contacts {
   String? name;
   String? email;
   Null? phone;
-  Null? photo;
+  String? photo;
   String? status;
   Null? lastActive;
   Null? firebaseToken;
@@ -79,6 +79,7 @@ class RecentChat {
   int? isRetracted;
   String? createdAt;
   String? updatedAt;
+  String? timeParse;
 
   RecentChat(
       {this.id,
@@ -89,6 +90,7 @@ class RecentChat {
       this.isRead,
       this.isRetracted,
       this.createdAt,
+      this.timeParse,
       this.updatedAt});
 
   RecentChat.fromJson(Map<String, dynamic> json) {
@@ -101,6 +103,7 @@ class RecentChat {
     isRetracted = json['is_retracted'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    timeParse = json['time_parse'];
   }
 
   Map<String, dynamic> toJson() {
@@ -114,6 +117,7 @@ class RecentChat {
     data['is_retracted'] = this.isRetracted;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['time_parse'] = this.timeParse;
     return data;
   }
 }

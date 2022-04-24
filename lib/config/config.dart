@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:developer';
 
@@ -71,7 +73,6 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
           'Authorization': 'Bearer $token',
         },
       );
-      log(response.body);
       if (response.statusCode == 200) {
         log('success fetch api $url');
         Map<String, dynamic> map = json.decode(response.body);
@@ -90,8 +91,7 @@ getRequestAPI(String prefix, String method, Object? body, context) async {
 }
 
 getFormatedTime(_date) {
-  final dateTime = DateTime.parse(_date);
-  final format = DateFormat('HH:mm');
-  var finalDate = format.format(dateTime);
-  return finalDate;
+  DateTime x = DateTime.parse(_date);
+  String date = DateFormat.Hm().format(x);
+  return date;
 }

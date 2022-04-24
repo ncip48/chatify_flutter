@@ -1,4 +1,4 @@
-// ignore_for_file: file_names, sized_box_for_whitespace, avoid_unnecessary_containers, avoid_print, prefer_final_fields, prefer_const_constructors
+// ignore_for_file: file_names, sized_box_for_whitespace, avoid_unnecessary_containers, avoid_print, prefer_final_fields, prefer_const_constructors, use_function_type_syntax_for_parameters, non_constant_identifier_names
 
 import 'dart:convert';
 import 'dart:developer';
@@ -8,6 +8,7 @@ import 'package:chat_flutter/models/Contacts.dart';
 import 'package:chat_flutter/widget/ListChat.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_flutter/utils/colors.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewChatPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class NewChatPage extends StatefulWidget {
 }
 
 class _MyNewChatPageState extends State<NewChatPage> {
-  String? txtSearch;
+  String txtSearch = '';
   List<String> stories = [
     "Story 1",
     "Story 2",
@@ -60,7 +61,7 @@ class _MyNewChatPageState extends State<NewChatPage> {
   }
 
   Future<void> searchContacts() async {
-    var body = jsonEncode(<String, String>{'name': txtSearch!});
+    var body = jsonEncode(<String, String>{'name': txtSearch});
     final response = await getRequestAPI('search-users', 'post', body, context);
     log(response.toString());
     List<dynamic> values = response;
@@ -86,6 +87,11 @@ class _MyNewChatPageState extends State<NewChatPage> {
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
     // final _height = MediaQuery.of(context).size.height;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+    ));
 
     return Container(
       decoration: const BoxDecoration(
@@ -128,12 +134,14 @@ class _MyNewChatPageState extends State<NewChatPage> {
                                     ),
                                   ),
                                   IconButton(
+                                    padding: EdgeInsets.all(0),
+                                    alignment: Alignment.centerRight,
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
                                     icon: const Icon(
                                       Icons.close,
-                                      size: 30,
+                                      size: 25,
                                       color: Colors.black,
                                     ),
                                   ),
@@ -211,12 +219,13 @@ class _MyNewChatPageState extends State<NewChatPage> {
                                       itemBuilder: (context, index) {
                                         var contacts = _contactList[index];
                                         return ListChat(
-                                          image:
-                                              'https://picsum.photos/seed/651/600',
+                                          image: contacts.photo ??
+                                              'https://www.nicepng.com/png/full/514-5146455_premium-home-loan-icon-download-in-svg-png.png',
                                           name: contacts.name!,
                                           chat: contacts.status!,
                                           time: contacts.createdAt!,
                                           me_send: contacts.recentChatMe!,
+                                          data: contacts,
                                         );
                                       },
                                     ),

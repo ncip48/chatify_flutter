@@ -219,34 +219,46 @@ class _MyHomePageState extends State<HomePage> {
                                 width: _width,
                                 decoration: BoxDecoration(
                                   color: putih,
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(30.0),
+                                    topLeft: Radius.circular(30.0),
+                                  ),
                                 ),
-                                child: _isLoading
-                                    ? Center(
-                                        child: CircularProgressIndicator(
-                                          color: green,
-                                        ),
-                                      )
-                                    : _contactList.isEmpty
-                                        ? Center(
-                                            child: Text('No Contact Found'),
-                                          )
-                                        : ListView.builder(
-                                            itemCount: _contactList.length,
-                                            itemBuilder: (context, index) {
-                                              var contacts =
-                                                  _contactList[index];
-                                              return ListChat(
-                                                image:
-                                                    'https://picsum.photos/seed/651/600',
-                                                name: contacts.name!,
-                                                chat: contacts
-                                                    .recentChat!.message!,
-                                                time: contacts
-                                                    .recentChat!.createdAt!,
-                                                me_send: contacts.recentChatMe!,
-                                              );
-                                            },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(30.0),
+                                    topLeft: Radius.circular(30.0),
+                                  ),
+                                  child: _isLoading
+                                      ? Center(
+                                          child: CircularProgressIndicator(
+                                            color: green,
                                           ),
+                                        )
+                                      : _contactList.isEmpty
+                                          ? Center(
+                                              child: Text('No Contact Found'),
+                                            )
+                                          : ListView.builder(
+                                              itemCount: _contactList.length,
+                                              itemBuilder: (context, index) {
+                                                var contacts =
+                                                    _contactList[index];
+                                                return ListChat(
+                                                  image: contacts.photo ??
+                                                      'https://www.nicepng.com/png/full/514-5146455_premium-home-loan-icon-download-in-svg-png.png',
+                                                  name: contacts.name!,
+                                                  chat: contacts
+                                                      .recentChat!.message!,
+                                                  time: contacts
+                                                      .recentChat!.timeParse!,
+                                                  me_send:
+                                                      contacts.recentChatMe!,
+                                                  data: contacts,
+                                                );
+                                              },
+                                            ),
+                                ),
                               ),
                             )
                           ],
