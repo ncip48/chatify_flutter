@@ -8,6 +8,7 @@ import 'package:chat_flutter/routes/routes.dart';
 import 'package:chat_flutter/widget/EmptyComponent.dart';
 import 'package:chat_flutter/widget/ListChat.dart';
 import 'package:chat_flutter/widget/ListStory.dart';
+import 'package:chat_flutter/widget/PlaneIndicator.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_flutter/utils/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -91,12 +92,19 @@ class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
       decoration: const BoxDecoration(
         color: Color(0xFF273A48),
       ),
-      child: RefreshIndicator(
-        onRefresh: onRefresh,
+      child: PlaneIndicator(
+        onAction: () => refreshBack(),
         child: Stack(
           children: <Widget>[
             Scaffold(
               backgroundColor: green,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: AppBar(
+                  backgroundColor: green,
+                  elevation: 0,
+                ),
+              ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   Navigator.of(context)
@@ -287,7 +295,7 @@ class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
                                             ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
