@@ -59,9 +59,9 @@ void main() async {
       ?.createNotificationChannel(channel);
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: false,
+    alert: true,
     badge: true,
-    sound: false,
+    sound: true,
   );
 
   AwesomeNotifications().initialize('resource://drawable/ic_icon', [

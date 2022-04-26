@@ -98,6 +98,11 @@ class _DetailChatPageState extends State<DetailChatPage> {
     });
   }
 
+  Future<void> _sendChat() async {
+    _textController.clear();
+    sendChat();
+  }
+
   Future<void> sendChat() async {
     Message input = Message(
       id: _messages.length + 1,
@@ -144,7 +149,6 @@ class _DetailChatPageState extends State<DetailChatPage> {
       _messages = temp;
       _txtChat = '';
     });
-    _textController.clear();
   }
 
   Future<void> openCloseEmoji() async {
@@ -227,7 +231,7 @@ class _DetailChatPageState extends State<DetailChatPage> {
             color: _txtChat.isEmpty ? Colors.grey : green,
             iconSize: 25.0,
             onPressed: () {
-              _txtChat.isEmpty ? null : sendChat();
+              _txtChat.isEmpty ? null : _sendChat();
             },
           ),
         ],

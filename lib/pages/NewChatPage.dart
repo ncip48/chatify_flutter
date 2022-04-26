@@ -5,6 +5,7 @@ import 'dart:developer';
 
 import 'package:chat_flutter/config/config.dart';
 import 'package:chat_flutter/models/Contacts.dart';
+import 'package:chat_flutter/widget/EmptyComponent.dart';
 import 'package:chat_flutter/widget/ListChat.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_flutter/utils/colors.dart';
@@ -20,27 +21,22 @@ class NewChatPage extends StatefulWidget {
 
 class _MyNewChatPageState extends State<NewChatPage> {
   String txtSearch = '';
-  List<String> stories = [
-    "Story 1",
-    "Story 2",
-    "Story 3",
-    "Story 4",
-    "Story 5",
-    "Story 6",
-    "Story 7",
-    "Story 8"
-  ];
+  bool isLoading = false;
+  bool isSearchState = false;
+  String? resultSearchText;
 
   @override
   void initState() {
     super.initState();
     // getContacts();
-    getContacts();
+    // getContacts();
   }
 
   List<Contacts> _contactList = [];
   Future<void> getContacts() async {
-    setState(() => {});
+    setState(() {
+      isLoading = true;
+    });
     final response = await getRequestAPI('users', 'get', null, context);
     log(response.toString());
     List<dynamic> values = response;
@@ -57,10 +53,15 @@ class _MyNewChatPageState extends State<NewChatPage> {
     print(_contactList.length);
     setState(() {
       _contactList = temp;
+      isLoading = false;
     });
   }
 
   Future<void> searchContacts() async {
+    setState(() {
+      isLoading = true;
+      isSearchState = true;
+    });
     var body = jsonEncode(<String, String>{'name': txtSearch});
     final response = await getRequestAPI('search-users', 'post', body, context);
     log(response.toString());
@@ -80,6 +81,8 @@ class _MyNewChatPageState extends State<NewChatPage> {
     print(_contactList.length);
     setState(() {
       _contactList = temp;
+      isLoading = false;
+      resultSearchText = txtSearch;
     });
   }
 
@@ -163,6 +166,14 @@ class _MyNewChatPageState extends State<NewChatPage> {
                                     txtSearch = value;
                                   });
                                 },
+                                onFieldSubmitted: (value) {
+                                  txtSearch.isEmpty
+                                      ? setState(() {
+                                          _contactList = [];
+                                          isSearchState = false;
+                                        })
+                                      : searchContacts();
+                                },
                                 obscureText: false,
                                 autofocus: false,
                                 decoration: InputDecoration(
@@ -182,7 +193,12 @@ class _MyNewChatPageState extends State<NewChatPage> {
                                     ),
                                     child: IconButton(
                                         onPressed: () {
-                                          searchContacts();
+                                          txtSearch.isEmpty
+                                              ? setState(() {
+                                                  _contactList = [];
+                                                  isSearchState = false;
+                                                })
+                                              : searchContacts();
                                         },
                                         icon: Icon(Icons.search),
                                         color: Colors.white),
@@ -210,26 +226,39 @@ class _MyNewChatPageState extends State<NewChatPage> {
                               decoration: BoxDecoration(
                                 color: putih,
                               ),
-                              child: _contactList.isEmpty
+                              child: isLoading
                                   ? Center(
-                                      child: Text('No User Found'),
+                                      child: CircularProgressIndicator(
+                                        color: green,
+                                      ),
                                     )
-                                  : ListView.builder(
-                                      itemCount: _contactList.length,
-                                      itemBuilder: (context, index) {
-                                        var contacts = _contactList[index];
-                                        return ListChat(
-                                          image: contacts.photo ??
-                                              'https://www.nicepng.com/png/full/514-5146455_premium-home-loan-icon-download-in-svg-png.png',
-                                          name: contacts.name!,
-                                          chat: contacts.status!,
-                                          time: '',
-                                          me_send: contacts.recentChatMe!,
-                                          data: contacts,
-                                          onFetch: null,
-                                        );
-                                      },
-                                    ),
+                                  : _contactList.isEmpty
+                                      ? Center(
+                                          child: EmptyComponent(
+                                            image: isSearchState
+                                                ? "https://i.ibb.co/BN6Dy9G/3973481.jpg"
+                                                : "https://i.ibb.co/C1kCxZN/Vector-Search-PNG-Free-Image.png",
+                                            title: isSearchState
+                                                ? "Oopps sorry, no user found for '$resultSearchText' :( \n Try another name or check spelling again."
+                                                : "Find your friend by type email or name in searchbox then press icon search.",
+                                          ),
+                                        )
+                                      : ListView.builder(
+                                          itemCount: _contactList.length,
+                                          itemBuilder: (context, index) {
+                                            var contacts = _contactList[index];
+                                            return ListChat(
+                                              image: contacts.photo ??
+                                                  'https://www.nicepng.com/png/full/514-5146455_premium-home-loan-icon-download-in-svg-png.png',
+                                              name: contacts.name!,
+                                              chat: contacts.status!,
+                                              time: '',
+                                              me_send: contacts.recentChatMe!,
+                                              data: contacts,
+                                              onFetch: null,
+                                            );
+                                          },
+                                        ),
                             ),
                           )
                         ],

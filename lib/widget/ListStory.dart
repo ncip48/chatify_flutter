@@ -45,7 +45,7 @@ class ListStory extends StatelessWidget {
                     Text(
                       name,
                       style: GoogleFonts.poppins(
-                        fontSize: 12,
+                        fontSize: 14,
                         fontWeight: FontWeight.normal,
                         color: putih,
                       ),

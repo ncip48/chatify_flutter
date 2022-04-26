@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:chat_flutter/config/config.dart';
 import 'package:chat_flutter/models/Contacts.dart';
 import 'package:chat_flutter/routes/routes.dart';
+import 'package:chat_flutter/widget/EmptyComponent.dart';
 import 'package:chat_flutter/widget/ListChat.dart';
 import 'package:chat_flutter/widget/ListStory.dart';
 import 'package:flutter/material.dart';
@@ -191,7 +192,7 @@ class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
                                               child: Text(
                                                 'Add',
                                                 style: GoogleFonts.poppins(
-                                                  fontSize: 12,
+                                                  fontSize: 14,
                                                   fontWeight: FontWeight.normal,
                                                   color: putih,
                                                 ),
@@ -258,7 +259,11 @@ class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
                                         )
                                       : _contactList.isEmpty
                                           ? Center(
-                                              child: Text('No Contact Found'),
+                                              child: EmptyComponent(
+                                                  image:
+                                                      "https://i.ibb.co/c6S1rqK/2992779.jpg",
+                                                  title:
+                                                      "No contacts found, please start chat by clicking + in bottom right menu"),
                                             )
                                           : ListView.builder(
                                               itemCount: _contactList.length,
