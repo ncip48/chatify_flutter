@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "722510993006-7sla7eou7idanlkpjpt0f7rd815hpjmk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.herly.chatify",
+            "certificate_hash": "69987d453f90131ed9013d3e835a94ff41224d52"
+          }
+        },
+        {
           "client_id": "722510993006-u8b3mevqh3hmebruptbdh5l4q7uu813e.apps.googleusercontent.com",
           "client_type": 3
         }

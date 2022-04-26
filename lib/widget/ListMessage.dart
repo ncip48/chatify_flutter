@@ -59,9 +59,13 @@ class ListMessage extends StatelessWidget {
                 ),
                 SizedBox(width: 6),
                 Icon(
-                  Icons.check,
-                  color: putih,
-                  size: 18.0,
+                  message.isRead == 1
+                      ? Icons.done_all
+                      : message.isPending!
+                          ? Icons.schedule
+                          : Icons.check,
+                  color: message.isRead == 1 ? Colors.yellow : putih,
+                  size: 15.0,
                 )
               ],
             )

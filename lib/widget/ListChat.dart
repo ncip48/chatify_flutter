@@ -10,9 +10,10 @@ class ListChat extends StatelessWidget {
   final String image;
   final String name;
   final String chat;
-  final String time;
+  final String? time;
   final bool me_send;
   final Contacts data;
+  final Function? onFetch;
 
   ListChat(
       {required this.image,
@@ -20,7 +21,8 @@ class ListChat extends StatelessWidget {
       required this.chat,
       required this.time,
       required this.me_send,
-      required this.data});
+      required this.data,
+      required this.onFetch});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,8 @@ class ListChat extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.pushNamed(context, Routes.Chat, arguments: data);
+            Navigator.pushNamed(context, Routes.Chat, arguments: data)
+                .then((value) => onFetch!());
           },
           child: Container(
             width: double.infinity,
@@ -85,8 +88,12 @@ class ListChat extends StatelessWidget {
                                       0,
                                     ),
                                     child: Icon(
-                                      Icons.check,
-                                      color: green,
+                                      data.recentChat!.isRead == 1
+                                          ? Icons.done_all
+                                          : Icons.check,
+                                      color: data.recentChat!.isRead! == 1
+                                          ? Colors.yellow
+                                          : green,
                                       size: 16,
                                     ),
                                   ),
@@ -109,7 +116,7 @@ class ListChat extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          time,
+                          time!,
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,

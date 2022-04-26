@@ -223,9 +223,10 @@ class _MyNewChatPageState extends State<NewChatPage> {
                                               'https://www.nicepng.com/png/full/514-5146455_premium-home-loan-icon-download-in-svg-png.png',
                                           name: contacts.name!,
                                           chat: contacts.status!,
-                                          time: contacts.createdAt!,
+                                          time: '',
                                           me_send: contacts.recentChatMe!,
                                           data: contacts,
+                                          onFetch: null,
                                         );
                                       },
                                     ),

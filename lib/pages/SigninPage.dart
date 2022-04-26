@@ -8,6 +8,7 @@ import 'dart:async';
 import 'dart:convert' show json, jsonEncode;
 import 'dart:developer';
 
+import 'package:chat_flutter/config/config.dart';
 import 'package:chat_flutter/routes/routes.dart';
 import 'package:chat_flutter/utils/colors.dart';
 import 'package:chat_flutter/widget/BezierContainer.dart';
@@ -63,7 +64,7 @@ class _SignInPageState extends State<SigninPage> {
   Future<void> _signInAPI(GoogleSignInAccount? account) async {
     // final responses = await getRequestAPI('contacts', 'get', null, context);
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/auth/login'),
+      Uri.parse(urlHost + '/api/auth/login'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -87,7 +88,7 @@ class _SignInPageState extends State<SigninPage> {
 
   Future<void> _registerAPI(GoogleSignInAccount? account) async {
     final response = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/auth/register'),
+      Uri.parse(urlHost + '/api/auth/register'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

@@ -4,11 +4,11 @@ class Contacts {
   int? id;
   String? name;
   String? email;
-  Null? phone;
+  String? phone;
   String? photo;
   String? status;
-  Null? lastActive;
-  Null? firebaseToken;
+  String? lastActive;
+  String? firebaseToken;
   String? createdAt;
   String? updatedAt;
   String? targetChat;
@@ -71,7 +71,7 @@ class Contacts {
 
 class RecentChat {
   int? id;
-  String? userId;
+  int? userId;
   int? targetId;
   String? message;
   Null? attachment;

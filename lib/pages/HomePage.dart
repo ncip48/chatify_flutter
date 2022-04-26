@@ -18,30 +18,41 @@ class HomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<HomePage> {
+class _MyHomePageState extends State<HomePage> with WidgetsBindingObserver {
   List<String> stories = [
-    "Story 1",
-    "Story 2",
-    "Story 3",
-    "Story 4",
-    "Story 5",
-    "Story 6",
-    "Story 7",
-    "Story 8"
+    "Aini ♡",
   ];
 
   @override
   void initState() {
     super.initState();
-    getContacts();
+    getContacts(true);
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    var _isInForeground = state == AppLifecycleState.resumed;
+    print('in foreground ~> ' + _isInForeground.toString());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance!.removeObserver(this);
+    super.dispose();
   }
 
   List<Contacts> _contactList = [];
   bool _isLoading = true;
-  Future<void> getContacts() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> getContacts(bool useLoading) async {
+    var token = await getToken();
+    print('token ~>' + token);
+    if (useLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
     final response = await getRequestAPI('contacts', 'get', null, context);
     log(response.toString());
     List<dynamic> values = response;
@@ -62,6 +73,14 @@ class _MyHomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> onRefresh() async {
+    await getContacts(true);
+  }
+
+  refreshBack() async {
+    await getContacts(false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final _width = MediaQuery.of(context).size.width;
@@ -72,14 +91,16 @@ class _MyHomePageState extends State<HomePage> {
         color: Color(0xFF273A48),
       ),
       child: RefreshIndicator(
-        onRefresh: getContacts,
+        onRefresh: onRefresh,
         child: Stack(
           children: <Widget>[
             Scaffold(
               backgroundColor: green,
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(Routes.NewChat);
+                  Navigator.of(context)
+                      .pushNamed(Routes.NewChat)
+                      .then((value) => getContacts(false));
                 },
                 child: const Icon(Icons.add),
                 backgroundColor: green,
@@ -202,7 +223,7 @@ class _MyHomePageState extends State<HomePage> {
                                         return ListStory(
                                             image:
                                                 'https://picsum.photos/250?image=9',
-                                            name: 'Herly',
+                                            name: stories[index],
                                             count: 3,
                                             padding: padding);
                                       },
@@ -255,6 +276,7 @@ class _MyHomePageState extends State<HomePage> {
                                                   me_send:
                                                       contacts.recentChatMe!,
                                                   data: contacts,
+                                                  onFetch: () => refreshBack(),
                                                 );
                                               },
                                             ),

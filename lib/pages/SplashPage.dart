@@ -3,16 +3,17 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:chat_flutter/config/config.dart';
 import 'package:chat_flutter/pages/HomePage.dart';
 import 'package:chat_flutter/pages/SigninPage.dart';
 import 'package:chat_flutter/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 // GoogleSignIn _googleSignIn = GoogleSignIn(
 //   // Optional clientId
@@ -58,29 +59,18 @@ class _SplashPageState extends State<SplashPage> {
       _isLogin = user != null ? true : false;
     });
     if (user != null) {
+      callApiUpdateProfile();
       log(user);
     }
   }
 
-  Future<void> callApiUpdateProfile(
-      String token, GoogleSignInAccount? account) async {
-    final response = await http.post(
-      Uri.parse('http://10.0.2.2:8000/api/auth/login'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(<String, String>{
-        'name': account!.displayName!,
-        'photo': account.photoUrl!,
-      }),
-    );
-    if (response.statusCode == 200) {
-      log('success update profile');
-    } else {
-      log('failed update profile');
-    }
+  Future<void> callApiUpdateProfile() async {
+    var firebaseToken = await getToken();
+    var body = jsonEncode(<String, String>{
+      'firebase_token': firebaseToken,
+    });
+    final response = await getRequestAPI('profile', 'patch', body, context);
+    log(response.toString());
   }
 
   Future<void> setSharedPreferences(String photo) async {
